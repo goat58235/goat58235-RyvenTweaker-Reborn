@@ -10,6 +10,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>RyvenTweaker</AssemblyName>
     <RootNamespace>RyvenTweaker</RootNamespace>
+
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
   </PropertyGroup>
