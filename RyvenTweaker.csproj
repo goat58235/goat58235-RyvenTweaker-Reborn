@@ -10,15 +10,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>RyvenTweaker</AssemblyName>
     <RootNamespace>RyvenTweaker</RootNamespace>
-
-    <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
-    <EnableDefaultPageItems>false</EnableDefaultPageItems>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml" />
-    <Page Include="MainWindow.xaml" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Management" Version="8.0.0" />
