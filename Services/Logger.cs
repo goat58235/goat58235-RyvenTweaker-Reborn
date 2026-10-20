@@ -6,27 +6,19 @@ namespace RyvenTweaker.Services
 {
     public sealed class Logger
     {
-        private readonly string _logDirectory;
-        private readonly string _logFile;
-
-        public Logger()
-        {
-            _logDirectory = Path.Combine(
+        private static readonly string LogDirectory =
+            Path.Combine(
                 Environment.GetFolderPath(
                     Environment.SpecialFolder.LocalApplicationData),
-                "RyvenTweaker");
+                "RyvenTweaker"
+            );
 
-            _logFile = Path.Combine(_logDirectory, "ryven.log");
-        }
+        private static readonly string LogFile =
+            Path.Combine(LogDirectory, "ryven.log");
 
         public void Info(string message)
         {
             Write("INFO", message);
-        }
-
-        public void Warning(string message)
-        {
-            Write("WARNING", message);
         }
 
         public void Error(string message)
@@ -34,17 +26,21 @@ namespace RyvenTweaker.Services
             Write("ERROR", message);
         }
 
-        private void Write(string level, string message)
+        public void Warning(string message)
+        {
+            Write("WARNING", message);
+        }
+
+        private static void Write(string level, string message)
         {
             try
             {
-                Directory.CreateDirectory(_logDirectory);
+                Directory.CreateDirectory(LogDirectory);
 
                 string entry =
-                    $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] " +
-                    $"[{level}] {message}{Environment.NewLine}";
+                    $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [{level}] {message}{Environment.NewLine}";
 
-                File.AppendAllText(_logFile, entry);
+                File.AppendAllText(LogFile, entry);
             }
             catch (IOException)
             {
@@ -52,13 +48,8 @@ namespace RyvenTweaker.Services
             }
             catch (UnauthorizedAccessException)
             {
-                // Continue if the log location is unavailable.
+                // Logging must not crash the application.
             }
-        }
-
-        public string GetLogPath()
-        {
-            return _logFile;
         }
     }
 }
