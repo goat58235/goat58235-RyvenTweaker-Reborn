@@ -8,8 +8,8 @@
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>RyvenTweaker</RootNamespace>
     <AssemblyName>RyvenTweaker</AssemblyName>
+    <RootNamespace>RyvenTweaker</RootNamespace>
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
   </PropertyGroup>
