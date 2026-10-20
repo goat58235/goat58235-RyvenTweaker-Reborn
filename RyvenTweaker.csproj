@@ -9,10 +9,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>RyvenTweaker</AssemblyName>
     <RootNamespace>RyvenTweaker</RootNamespace>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
   </PropertyGroup>
 
   <ItemGroup>
+    <Page Include="MainWindow.xaml" />
     <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
 </Project>
-
