@@ -2,39 +2,54 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using RyvenTweaker.Services;
 
 namespace RyvenTweaker
 {
     public partial class MainWindow : Window
     {
+        private readonly HardwareDetector _hardwareDetector = new();
+
         public MainWindow()
         {
             InitializeComponent();
 
             StatusText.Text = "READY";
-            CpuText.Text = Environment.GetEnvironmentVariable(
-                "PROCESSOR_IDENTIFIER") ?? "Not detected";
-
+            CpuText.Text = "Not scanned";
             GpuText.Text = "Not scanned";
             RamText.Text = "Not scanned";
 
             PageTitle.Text = "Performance Center";
             PageDescription.Text =
-                "Welcome to Ryven Tweaker. Scan your PC to begin.";
-            SearchBox.Text = "";
+                "Scan your PC to identify your hardware and explore optimization options.";
+
+            SearchBox.Text = string.Empty;
         }
 
         private void ScanButton_Click(object sender, RoutedEventArgs e)
         {
-            CpuText.Text = Environment.GetEnvironmentVariable(
-                "PROCESSOR_IDENTIFIER") ?? "Unknown";
+            StatusText.Text = "SCANNING...";
 
-            GpuText.Text = "Hardware scan coming next";
-            RamText.Text = "Hardware scan coming next";
-            StatusText.Text = "BASIC SCAN COMPLETE";
+            try
+            {
+                CpuText.Text = _hardwareDetector.GetProcessor();
+                GpuText.Text = _hardwareDetector.GetGraphicsCard();
+                RamText.Text = _hardwareDetector.GetMemory();
 
-            PageDescription.Text =
-                "Basic processor information loaded. Full hardware detection is coming next.";
+                StatusText.Text = "SCAN COMPLETE";
+                PageDescription.Text =
+                    "Hardware scan finished. Detected specifications are shown above.";
+            }
+            catch (Exception ex)
+            {
+                StatusText.Text = "SCAN ERROR";
+
+                MessageBox.Show(
+                    "Hardware scanning failed:\n" + ex.Message,
+                    "Ryven Tweaker",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
         }
 
         private void ShowPage(string title, string description)
@@ -42,9 +57,12 @@ namespace RyvenTweaker
             PageTitle.Text = title;
             PageDescription.Text = description;
             TweakList.ItemsSource = null;
+
             EmptyStateText.Visibility = Visibility.Visible;
             EmptyStateText.Text =
-                "Tools for this category will be added in the next steps.";
+                "Tools for this category will be added as they are implemented.";
+
+            SearchBox.Text = string.Empty;
         }
 
         private void OverviewButton_Click(object sender, RoutedEventArgs e)
@@ -97,18 +115,23 @@ namespace RyvenTweaker
         }
 
         private void SearchBox_TextChanged(
-            object sender, TextChangedEventArgs e)
+            object sender,
+            TextChangedEventArgs e)
         {
-            if (EmptyStateText != null && TweakList != null)
+            if (EmptyStateText == null || TweakList == null ||
+                SearchBox == null)
             {
-                string query = SearchBox.Text.Trim();
+                return;
+            }
 
-                if (TweakList.ItemsSource == null)
-                {
-                    EmptyStateText.Text = string.IsNullOrWhiteSpace(query)
-                        ? "Tools for this category will be added in the next steps."
-                        : "No tools have been added yet. Search will work when tools are available.";
-                }
+            string query = SearchBox.Text.Trim();
+
+            if (TweakList.ItemsSource == null)
+            {
+                EmptyStateText.Visibility = Visibility.Visible;
+                EmptyStateText.Text = string.IsNullOrWhiteSpace(query)
+                    ? "Tools for this category will be added as they are implemented."
+                    : "No matching tools yet. Search will work when optimization tools are added.";
             }
         }
     }
