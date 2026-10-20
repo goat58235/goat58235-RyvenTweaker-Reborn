@@ -3,8 +3,7 @@ name: Build Ryven Tweaker V2
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -12,11 +11,10 @@ permissions:
 
 jobs:
   build:
-    name: Build Windows EXE
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup .NET 8
@@ -24,19 +22,14 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore V2 dependencies
-        run: dotnet restore "./RyvenTweakerV2/RyvenTweaker.csproj" -r win-x64
-
-      - name: Build V2
-        run: dotnet build "./RyvenTweakerV2/RyvenTweaker.csproj" --configuration Release --no-restore
-
-      - name: Publish V2 Windows EXE
-        run: dotnet publish "./RyvenTweakerV2/RyvenTweaker.csproj" --configuration Release --runtime win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --output "./publish"
+      - name: Publish Ryven Tweaker V2
+        shell: pwsh
+        run: |
+          dotnet publish "RyvenTweakerV2-source/RyvenTweakerV2/RyvenTweaker.csproj" -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish
 
       - name: Upload V2 EXE
         uses: actions/upload-artifact@v4
         with:
           name: RyvenTweaker-V2-Windows-x64
-          path: ./publish/
+          path: publish/
           if-no-files-found: error
-          retention-days: 30
